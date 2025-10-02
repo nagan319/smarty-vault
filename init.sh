@@ -26,13 +26,13 @@ SCRIPTS_DIR=".scripts/file-management"
 
 # Function to display error messages and exit
 error_exit() {
-    echo -e "\n\033[0;31mERROR:\033[0m $1" >&2
+    echo -e "\nERROR: $1" >&2
     exit 1
 }
 
 # 1. Get the final installation path from the user
 get_install_path() {
-    echo -e "\n\033[1;36m--- Smarty Vault Setup ---\033[0m"
+    echo -e "\n--- Smarty Vault Setup ---"
     echo "Welcome! We need to choose the permanent home for Smarty Vault."
     echo "Recommended path: $HOME/SmartyVault"
     read -rp "Enter the absolute path for the Smarty Vault folder: " INSTALL_PATH
