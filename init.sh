@@ -20,7 +20,7 @@ if [ -f "$HOME/.zshrc" ]; then
     PROFILE_FILE="$HOME/.zshrc"
 fi
 # Directory containing all helper scripts
-SCRIPTS_DIR=".scripts/file-management"
+SCRIPTS_DIR=".scripts/"
 
 # --- Functions ---
 
