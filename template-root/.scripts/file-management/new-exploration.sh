@@ -40,7 +40,7 @@ create_exploration_structure() {
 
     # Minimal structure: only a notes folder
     local core_dirs=(
-        "01.notes"
+        "notes"
     )
 
     echo "Creating core structure in $EXPLORATION_PATH..."
