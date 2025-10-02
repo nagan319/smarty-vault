@@ -67,23 +67,23 @@ The provided directories and scripts serve the following purposes:
 
 Root of the system. Stores all non-Obsidian files: compiled PDFs (assignments, research papers), reference materials (textbooks), and code repositories.
 
-All .scripts/ use this as the base working directory.
+All `.scripts/` use this as the base working directory.
 
 ### 00.academic-network/ 
 
 Target directory for compiled Career Relationship Management (CRM) reports. Stores PDF snapshots of your network at different points in time.
 
-Reports can be generated using crm-compile.sh.
+Reports can be generated using `crm-compile.sh`.
 
 ### 01.courses/
 
 Stores compiled output for coursework: finalized lecture notes, submitted problem sets, and graded assignments.
 
-new-course.sh, archive-course.sh, unarchive-course.sh, and remove-course.sh can be used to manipulate files stored within this directory.
+`new-course.sh`, `archive-course.sh`, `unarchive-course.sh`, and `remove-course.sh` can be used to manipulate files stored within this directory.
 
 **Sample Course Subdirectory**
 
-When running new-course.sh, the following standard folder is created within 01.courses/ to ensure uniformity for every class:
+When running `new-course.sh`, the following standard folder is created within `01.courses/` to ensure uniformity for every class:
 
 ```
 template-root/
@@ -99,19 +99,19 @@ template-root/
         └── code/              <-- Scripts, notebooks, or project codebases
 ```
 
-The code/ subdirectory is optional and can be added using the --code flag.
+The `code/` subdirectory is optional and can be added using the `--code` flag.
 
 ### 02.engagement-projects/
 
 Holds compiled output for non-course, structured work, like internships, committee roles, or group projects.
 
-new-project.sh, archive-project.sh, unarchive-project.sh, and remove-project.sh can be used to manipulate files stored within this directory.
+`new-project.sh`, `archive-project.sh`, `unarchive-project.sh`, and `remove-project.sh` can be used to manipulate files stored within this directory.
 
 ### 03.research-exploration/
 
 Stores long-term, exploratory work, including original research codebases, data files, and manuscripts.
 
-new-exploration.sh and remove-exploration.sh can be used to manipulate files stored within this directory.
+`new-exploration.sh` and `remove-exploration.sh` can be used to manipulate files stored within this directory.
 
 ### 04.vault/
 
@@ -122,7 +122,7 @@ The Obsidian Vault. This folder contains all your editable, plain-text Markdown 
 ### 1. Dependencies and Prerequisites
 
 - Obsidian: Installed on your system.
-- Pandoc: Installed on your system and added to your system PATH (required for pandoc-compile.sh and crm-compile.sh to convert Markdown/LaTeX to professional PDFs).
+- Pandoc: Installed on your system and added to your system PATH (required for `pandoc-compile.sh` and `crm-compile.sh` to convert Markdown/LaTeX to professional PDFs).
 - Shell Environment: A Unix-like shell (Bash/Zsh on macOS/Linux, or WSL/Git Bash on Windows) to run the .sh scripts.
 
 ### 2. Obsidian Plugin Installation (Recommended)
@@ -136,12 +136,12 @@ Install these community plugins to maximize the functionality of your Vault:
 
 - Clone the Repository: Download the entire Smarty Vault structure onto your local system.
 - Run Initialization: Open your system terminal (or the integrated Obsidian Terminal pane) and navigate to the repository's root directory (/).
-- Execute the initial setup script: ./init.sh.
-- Create Your Vault: In Obsidian, open the 04.vault/ directory as a new vault.
+- Execute the initial setup script: `./init.sh`.
+- Create Your Vault: In Obsidian, open the `04.vault/` directory as a new vault.
 
 ### 4. Synchronization (Optional but Recommended)
 
 If you need to access your vault across multiple computers, use a third-party synchronization tool:
 - Rclone is an excellent choice for syncing the entire directory structure with services like Google Drive, Dropbox, or OneDrive while maintaining local control.
-- Alternatively, you can use Obsidian Sync for the contents of the 04.vault/ folder, and a standard cloud service (like Google Drive) for the rest of the template-root/ and compiled files.
+- Alternatively, you can use Obsidian Sync for the contents of the `04.vault/` folder, and a standard cloud service (like Google Drive) for the rest of the `template-root/` and compiled files.
 
