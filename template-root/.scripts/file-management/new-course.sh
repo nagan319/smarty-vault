@@ -55,7 +55,7 @@ create_course_structure() {
     elif [ "$structure_type" == "vault" ]; then
         # Minimal source structure (includes only editable folders for Markdown source)
         local core_dirs=(
-            "assignments/raw"         # Editable assignment source files
+            "assignments/submissions" # Editable assignment files
             "notes/lecture"           # Editable lecture notes source
             "notes/misc"              # Editable auxiliary notes source
         )
