@@ -18,6 +18,7 @@ By placing scripts, raw files, and a personal knowledge vault in a single, porta
 
 Smarty Vault uses the following directory structure:
 
+```
 /
 ├── init.sh                 
 ├── LICENSE                 
@@ -58,6 +59,7 @@ Smarty Vault uses the following directory structure:
             ├── 02.orgs/
             ├── 03.events/
             └── CRM-DASHBOARD.md
+```
 
 The provided directories and scripts serve the following purposes:
 
@@ -79,10 +81,11 @@ Stores compiled output for coursework: finalized lecture notes, submitted proble
 
 new-course.sh, archive-course.sh, unarchive-course.sh, and remove-course.sh can be used to manipulate files stored within this directory.
 
-### Sample Course Subdirectory
+**Sample Course Subdirectory**
 
 When running new-course.sh, the following standard folder is created within 01.courses/ to ensure uniformity for every class:
 
+```
 template-root/
 └── 01.courses/
     └── [COURSE-NAME]/
@@ -94,6 +97,7 @@ template-root/
         │   └── misc/          <-- Compiled auxiliary materials (e.g., PDF)
         ├── textbooks/         <-- Reference E-Books or digital readings
         └── code/              <-- Scripts, notebooks, or project codebases
+```
 
 The code/ subdirectory is optional and can be added using the --code flag.
 
