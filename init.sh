@@ -106,15 +106,19 @@ set_environment_variable() {
 
 # 4. Set executable permissions for all management scripts
 set_permissions() {
-    echo -e "\n\033[0;33mPhase 3: Setting Script Permissions...\033[0m"
+    echo -e "\nPhase 3: Setting Script Permissions..."
     
-    # Path to the file-management scripts within the new location
-    local SCRIPT_PATH="$SMARTY_ROOT/$SCRIPTS_DIR"
+    # Path to the .scripts folder within the new location
+    local SCRIPT_PATH="$SMARTY_ROOT/.scripts"
     
-    # Grant executable permission to all scripts in the file-management directory
-    chmod +x "$SCRIPT_PATH"/*.sh || error_exit "Failed to set executable permissions on scripts."
+    # Use 'find' to recursively locate all .sh files in subdirectories and apply permissions.
+    find "$SCRIPT_PATH" -type f -name "*.sh" -exec chmod +x {} \;
     
-    echo "All file-management scripts are now executable."
+    if [ $? -ne 0 ]; then
+        error_exit "Failed to set executable permissions on scripts."
+    fi
+    
+    echo "All helper scripts in subdirectories are now executable."
 }
 
 # 5. Create the global 'smarty' wrapper command
