@@ -123,13 +123,39 @@ set_permissions() {
 
 # 5. Create the global 'smarty' wrapper command
 create_global_command() {
-    echo -e "\n\033[0;33mPhase 4: Creating Global 'smarty' Command...\033[0m"
+    echo -e "\nPhase 4: Creating Global 'smarty' Command..."
     
     # A simple wrapper function placed in the global bin directory
     WRAPPER_SCRIPT="$GLOBAL_BIN_DIR/smarty"
 
-    # The content of the wrapper script
-    WRAPPER_CONTENT="#!/bin/bash\n\n# Smarty Vault Global Wrapper\n# Executable location (e.g., new-course.sh) relative to \$SMARTY_ROOT\n\nSCRIPT_NAME=\"\$1\"\nshift\n\n\$SMARTY_ROOT/.scripts/file-management/\$SCRIPT_NAME.sh \"\$@\""
+    # --- CRITICAL FIX: Wrapper content now uses 'find' to locate script ---
+    WRAPPER_CONTENT=$(cat << EOF
+#!/bin/bash
+
+# Smarty Vault Global Wrapper
+# Finds and executes any script within the \$SMARTY_ROOT/.scripts/ directory structure.
+
+SCRIPT_COMMAND="\$1"
+shift
+
+# 1. Define the base script directory
+SMARTY_SCRIPT_BASE="\$SMARTY_ROOT/.scripts"
+
+# 2. Find the script with the exact name (case-sensitive) recursively
+# Note: Escaping the '*' is critical to prevent shell expansion here.
+SCRIPT_PATH=\$(find "\$SMARTY_SCRIPT_BASE" -type f -name "\$SCRIPT_COMMAND.sh" 2>/dev/null)
+
+if [ -z "\$SCRIPT_PATH" ]; then
+    echo "ERROR: Smarty command '\$SCRIPT_COMMAND' not found." >&2
+    echo "Check available scripts in: \$SMARTY_ROOT/.scripts/" >&2
+    exit 1
+fi
+
+# 3. Execute the found script with all remaining arguments
+# Note: Use exec to replace the current shell process with the script
+exec "\$SCRIPT_PATH" "\$@"
+EOF
+)
 
     # Check and warn if /usr/local/bin doesn't exist or isn't writable
     if [ ! -w "$GLOBAL_BIN_DIR" ]; then
