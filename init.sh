@@ -32,7 +32,7 @@ error_exit() {
 
 # 1. Get the final installation path from the user
 get_install_path() {
-    echo -e "\n--- Smarty Vault Setup ---"
+    echo -e "\n\033[1;37m-- Smarty Vault Setup ---\033[0m"
     echo "Welcome! We need to choose the permanent home for Smarty Vault."
     echo "Recommended path: $HOME/SmartyVault"
     read -rp "Enter the absolute path for the Smarty Vault folder: " INSTALL_PATH
