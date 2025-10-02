@@ -6,11 +6,11 @@ Smarty Vault's philosophy is simple: maximize consistency, minimize friction.
 
 It's a dedicated workflow engine that allows users to:
 
-1. Professionalize Output: maintain an organized system of raw, Obsidian-based Markdown files along with consistent, publication-ready PDFs all in one file system.
+1. **Professionalize Output:** maintain an organized system of raw, Obsidian-based Markdown files along with consistent, publication-ready PDFs all in one file system.
 
-2. Streamline Organization: Enforce a reliable, consistent directory structure across all academic activities, from active coursework to long-term research.
+2. **Streamline Organization:** Enforce a reliable, consistent directory structure across all academic activities, from active coursework to long-term research.
 
-3. Build Your Network: Maintain a focused, up-to-date Career Relationship Management (CRM) database for tracking professional contacts, organizations, and events, allowing for quick retrieval and snapshot compilation of networking efforts.
+3. **Build Your Network:** Maintain a focused, up-to-date Career Relationship Management (CRM) database for tracking professional contacts, organizations, and events, allowing for quick retrieval and snapshot compilation of networking efforts.
 
 By placing scripts, raw files, and a personal knowledge vault in a single, portable directory, Smarty Vault ensures you spend your time mastering material instead of managing files.
 
