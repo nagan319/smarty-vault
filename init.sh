@@ -161,8 +161,8 @@ create_global_command
 # 6. Final success message and instructions
 echo -e "\n\n\033[1;32m🎉 Smarty Vault Installation Complete!\033[0m"
 echo "--------------------------------------------------------------------------------"
-echo "1. \033[1mRESTART YOUR TERMINAL\033[0m to load the new SMARTY_ROOT variable."
-echo "2. Open Obsidian and create a new vault pointing to: \033[1m$SMARTY_ROOT/04.vault/\033[0m"
+echo "1. RESTART YOUR TERMINAL to load the new SMARTY_ROOT variable."
+echo "2. Open Obsidian and create a new vault pointing to: $SMARTY_ROOT/04.vault/"
 echo -e "3. Test your new command (from any directory):\n"
 echo -e "\033[1;37msmarty new-course \"CHEM-101-Intro\"\033[0m"
 echo -e "\033[1;37msmarty new-project \"Thesis-Manuscript\"\033[0m"
