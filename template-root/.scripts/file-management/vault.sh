@@ -3,14 +3,16 @@
 # ==============================================================================
 # vault.sh
 # ------------------------------------------------------------------------------
-# DESCRIPTION: Launches the Obsidian Vault folder (04.vault/) directly 
-#              using the explicit Obsidian executable path.
+# DESCRIPTION: Launches the Obsidian Vault using the Obsidian URI scheme.
 # ==============================================================================
 
-# --- Configuration: CHANGE THIS LINE ---
-# Find the command that works for your system (e.g., 'obsidian' if in PATH, or the full Flatpak command)
-OBSIDIAN_CMD="flatpak run md.obsidian.Obsidian"
-# ----------------------------------------
+# --- Configuration ---
+# 1. Name of the Vault (Must match the name Obsidian registered for the 04.vault folder)
+#    Since the folder is '04.vault', we assume the name is the same.
+VAULT_NAME="04.vault"
+
+# 2. Base URI for the vault (Path will be added below)
+OBS_URI_BASE="obsidian://open?vault="
 
 # --- Prerequisites ---
 if [ -z "$SMARTY_ROOT" ]; then
@@ -21,17 +23,14 @@ fi
 
 # --- Execution ---
 
-VAULT_PATH="$SMARTY_ROOT/04.vault"
+# 1. Build the full Obsidian URI. Note: Spaces must be URL-encoded (%20), but we
+#    assume your structured folder name "04.vault" doesn't have spaces.
+FULL_URI="${OBS_URI_BASE}${VAULT_NAME}"
 
-if [ ! -d "$VAULT_PATH" ]; then
-    echo "ERROR: Obsidian vault path not found at $VAULT_PATH." >&2
-    exit 1
-fi
+echo "Launching vault via URI: $FULL_URI"
 
-echo "Launching Obsidian vault at: $VAULT_PATH"
-
-# Execute Obsidian, passing the vault path as an argument.
-# 'nohup' and '&' run the command in the background, detaching it from the terminal.
-nohup $OBSIDIAN_CMD "$VAULT_PATH" > /dev/null 2>&1 &
+# 2. Use xdg-open to handle the custom URI protocol.
+#    This command is generally compatible with Wayland/X11.
+nohup xdg-open "$FULL_URI" > /dev/null 2>&1 &
 
 exit 0
