@@ -1,5 +1,15 @@
 # Smarty Vault: Unify Your Academic Life
 
+| Core Philosophy | Engine | Primary Tools | Status |
+| :--- | :--- | :--- | :--- |
+| **Frictionless Workflow** | ⚙️ Shell Scripts (Bash) | **Obsidian, Pandoc, rclone** | ✅ Stable |
+
+| Feature Focus | Description | Command Examples |
+| :--- | :--- | :--- |
+| **Academic Organization** | Enforces consistent structure for all coursework and projects. | `smarty new-course <NAME>` |
+| **Professional Output** | Compiles source files (MD/TeX) into publication-ready PDFs. | `smarty pandoc-compile <FILE>` |
+| **Network Management** | Generates reports from the internal CRM database in Obsidian. | `smarty crm-compile` |
+
 The modern academic career is fragmented, often requiring students to juggle coursework, research files, and professional networking data across disparate systems. Smarty Vault is a unified, shell-script-driven organization system built on the powerful foundation of Obsidian and designed to solve this fragmentation.
 
 Smarty Vault's philosophy is simple: maximize consistency, minimize friction.
@@ -27,7 +37,6 @@ Smarty Vault uses the following directory structure:
     ├── .scripts/
     │   ├── compilation/
     │   │   ├── crm-compile.sh
-    │   │   ├── crm-decompile.sh
     │   │   └── pandoc-compile.sh
     │   ├── file-management/
     │   │   ├── archive-course.sh
