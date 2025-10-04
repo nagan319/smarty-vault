@@ -40,6 +40,7 @@ Smarty Vault uses the following directory structure:
     │   │   └── remove-project.sh
     │   │   ├── unarchive-course.sh
     │   │   ├── unarchive-project.sh
+    │   │   ├── vault.sh
     │   └── system-health/
     │       ├── check-health.sh
     │       └── package.sh
@@ -116,6 +117,8 @@ Stores long-term, exploratory work, including original research codebases, data 
 ### 04.vault/
 
 The Obsidian Vault. This folder contains all your editable, plain-text Markdown files, serving as the single source of truth for your knowledge and data.
+
+`vault.sh` can be used to automatically open Obsidian at the vault subdirectory.
 
 ## Setup and Dependencies
 
