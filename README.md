@@ -118,7 +118,7 @@ Stores long-term, exploratory work, including original research codebases, data 
 
 The Obsidian Vault. This folder contains all your editable, plain-text Markdown files, serving as the single source of truth for your knowledge and data.
 
-`vault.sh` can be used to automatically open Obsidian at the vault subdirectory. 
+`vault.sh` can be used to automatically open Obsidian at the vault subdirectory. However, note that you will need to manually open this vault through the Obsidian GUI once during setup to register it.
 
 ## Setup and Dependencies
 
@@ -128,19 +128,19 @@ The Obsidian Vault. This folder contains all your editable, plain-text Markdown 
 - Pandoc: Installed on your system and added to your system PATH (required for `pandoc-compile.sh` and `crm-compile.sh` to convert Markdown/LaTeX to professional PDFs).
 - Shell Environment: A Unix-like shell (Bash/Zsh on macOS/Linux, or WSL/Git Bash on Windows) to run the .sh scripts.
 
-### 2. Obsidian Plugin Installation (Recommended)
-
-Install these community plugins to maximize the functionality of your Vault:
-- Dataview: Essential for querying the structured data (metadata/YAML) in your notes and transforming the raw CRM files into the unified CRM-DASHBOARD.md view.
-- Metadata Menu: Highly recommended for enforcing data consistency and streamlining input when creating new contacts, organizations, and events.
-- Latex Suite: Highly recommended if your academic work involves frequent mathematical or scientific notation, as it dramatically speeds up LaTeX typing.
-
-### 3. Initial Setup
+### 2. Initial Setup
 
 - Clone the Repository: Download the entire Smarty Vault structure onto your local system.
 - Run Initialization: Open your system terminal (or the integrated Obsidian Terminal pane) and navigate to the repository's root directory (/).
 - Execute the initial setup script: `./init.sh`.
 - Create Your Vault: In Obsidian, open the `04.vault/` directory as a new vault.
+
+### 3. Obsidian Plugin Installation (Recommended)
+
+Install these community plugins to maximize the functionality of your Vault:
+- Dataview: Essential for querying the structured data (metadata/YAML) in your notes and transforming the raw CRM files into the unified CRM-DASHBOARD.md view.
+- Metadata Menu: Highly recommended for enforcing data consistency and streamlining input when creating new contacts, organizations, and events.
+- Latex Suite: Highly recommended if your academic work involves frequent mathematical or scientific notation, as it dramatically speeds up LaTeX typing.
 
 ### 4. Synchronization (Optional but Recommended)
 
