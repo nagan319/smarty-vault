@@ -13,12 +13,21 @@
 
 # --- Configuration ---
 # Target directory for global commands
-GLOBAL_BIN_DIR="/usr/local/bin" 
-# File that defines user's shell environment (Zsh/Bash compatible)
+GLOBAL_BIN_DIR="/usr/local/bin"
+# Check the user's current shell and determine the configuration file path
+# Default to Bash/Zsh, but check for Fish config presence
 PROFILE_FILE="$HOME/.bashrc"
 if [ -f "$HOME/.zshrc" ]; then
     PROFILE_FILE="$HOME/.zshrc"
 fi
+FISH_CONFIG_FILE="$HOME/.config/fish/config.fish"
+SHELL_TYPE="bash"
+
+if [ -f "$FISH_CONFIG_FILE" ]; then
+    PROFILE_FILE="$FISH_CONFIG_FILE"
+    SHELL_TYPE="fish"
+fi
+
 # Directory containing all helper scripts
 SCRIPTS_DIR=".scripts"
 
@@ -26,7 +35,7 @@ SCRIPTS_DIR=".scripts"
 
 # Function to display error messages and exit
 error_exit() {
-    echo -e "\nERROR: $1" >&2
+    echo -e "\n\033[1;31mERROR:\033[0m $1" >&2
     exit 1
 }
 
@@ -35,7 +44,20 @@ get_install_path() {
     echo -e "\n\033[1;37m-- Smarty Vault Setup ---\033[0m"
     echo "Welcome! We need to choose the permanent home for Smarty Vault."
     echo "Recommended path: $HOME/SmartyVault"
-    read -rp "Enter the absolute path for the Smarty Vault folder: " INSTALL_PATH
+    
+    # Check if the repository is running from $HOME/SmartyVault
+    CURRENT_REPO_DIR=$(dirname "$(pwd)")
+    INSTALL_PATH_DEFAULT="$HOME/SmartyVault"
+
+    # Use the current directory as the path if it's external to the home directory
+    if [[ "$CURRENT_REPO_DIR" != "$HOME"* ]]; then
+        INSTALL_PATH_DEFAULT="$CURRENT_REPO_DIR"
+    fi
+
+    read -rp "Enter the absolute path for the Smarty Vault folder [$INSTALL_PATH_DEFAULT]: " INSTALL_PATH
+    
+    # Use default if user pressed Enter
+    INSTALL_PATH="${INSTALL_PATH:-$INSTALL_PATH_DEFAULT}"
     
     # Remove trailing slash for consistency
     INSTALL_PATH="${INSTALL_PATH%/}"
@@ -56,7 +78,7 @@ get_install_path() {
         mkdir -p "$INSTALL_PARENT_DIR" || error_exit "Failed to create parent directory $INSTALL_PARENT_DIR."
     fi
 
-    # Absolute path to the template-root, which contains 01.courses, 04.vault, etc.
+    # The actual working root is inside the template folder
     export SMARTY_ROOT="$INSTALL_PATH/template-root"
 }
 
@@ -67,14 +89,15 @@ relocate_repo() {
     # Get the current directory of the script (the downloaded repo folder)
     CURRENT_DIR=$(pwd)
     
-    # Move all contents to the final location
-    echo "Moving contents from $CURRENT_DIR to $INSTALL_PATH..."
-    
     # Check if the target path is a sub-directory of the current path
     if [[ "$INSTALL_PATH" == "$CURRENT_DIR"* ]]; then
         error_exit "Cannot install into a subdirectory of the current location. Please choose an external path."
     fi
 
+    # Move all contents to the final location
+    echo "Moving contents from $CURRENT_DIR to $INSTALL_PATH..."
+    
+    # Note: Use 'mv' to rename the current directory to the new INSTALL_PATH
     mv "$CURRENT_DIR" "$INSTALL_PATH" || error_exit "Failed to move the repository files to $INSTALL_PATH."
     cd "$INSTALL_PATH"
     
@@ -85,32 +108,56 @@ relocate_repo() {
 set_environment_variable() {
     echo -e "\n\033[0;33mPhase 2: Setting Environment Variable...\033[0m"
     
-    # Variable line to inject
-    EXPORT_LINE="# Smarty Vault Root Path (Set by init.sh)\nexport SMARTY_ROOT=\"$SMARTY_ROOT\""
+    # --- TEMPORARY EXPORT (For the rest of this init.sh script) ---
+    # This ensures Phase 3 and 4 work immediately without a restart.
+    export SMARTY_ROOT="$INSTALL_PATH/template-root"
+    echo "SMARTY_ROOT temporarily set to $SMARTY_ROOT for script execution."
     
-    # Check if the variable is already set by looking for the Smarty Vault tag
-    if grep -q "Smarty Vault Root Path" "$PROFILE_FILE"; then
-        echo "Updating existing SMARTY_ROOT definition in $PROFILE_FILE..."
-        # Use sed to safely replace the existing entry
-        sed -i '' -e '/# Smarty Vault Root Path/ { N; s|.*|'"$EXPORT_LINE"'|; }' "$PROFILE_FILE"
+    # --- PERMANENT INSTALLATION ---
+    
+    TAG="# Smarty Vault Root Path"
+    
+    if [ "$SHELL_TYPE" = "fish" ]; then
+        # Fish uses 'set -gx' and config.fish
+        EXPORT_LINE="set -gx SMARTY_ROOT \"$SMARTY_ROOT\""
+        
+        # Check and update/append to the Fish config file
+        if grep -q "SMARTY_ROOT" "$PROFILE_FILE"; then
+            echo "Updating existing SMARTY_ROOT definition in $PROFILE_FILE..."
+            # Use sed to replace the existing definition if it exists
+            sed -i '' -e "/SMARTY_ROOT/s|^.*|$EXPORT_LINE|" "$PROFILE_FILE"
+        else
+            echo "Adding SMARTY_ROOT definition to $PROFILE_FILE..."
+            echo -e "\n$TAG (Fish)\n$EXPORT_LINE" >> "$PROFILE_FILE"
+        fi
+
     else
-        echo "Adding SMARTY_ROOT definition to $PROFILE_FILE..."
-        echo -e "\n$EXPORT_LINE" >> "$PROFILE_FILE"
+        # Bash/Zsh uses 'export' and the determined profile file
+        EXPORT_LINE="export SMARTY_ROOT=\"$SMARTY_ROOT\""
+        
+        if grep -q "SMARTY_ROOT" "$PROFILE_FILE"; then
+            # Use sed to replace the existing definition if it exists
+            sed -i '' -e "/SMARTY_ROOT/ { N; s|.*|# Smarty Vault Root Path\n$EXPORT_LINE|; }" "$PROFILE_FILE"
+        else
+            echo "Adding SMARTY_ROOT definition to $PROFILE_FILE..."
+            echo -e "\n$TAG (Bash/Zsh)\n$EXPORT_LINE" >> "$PROFILE_FILE"
+        fi
     fi
     
-    # Source the profile file immediately so the variable is available for the rest of the script
-    source "$PROFILE_FILE"
-    
-    echo "SMARTY_ROOT is set to $SMARTY_ROOT and updated in $PROFILE_FILE."
+    echo "SMARTY_ROOT permanently defined in $PROFILE_FILE."
 }
 
 # 4. Set executable permissions for all management scripts
 set_permissions() {
-    echo -e "\nPhase 3: Setting Script Permissions..."
+    echo -e "\n\033[0;33mPhase 3: Setting Script Permissions...\033[0m"
     
     # Path to the .scripts folder within the new location
-    local SCRIPT_PATH="$SMARTY_ROOT/.scripts"
+    local SCRIPT_PATH="$SMARTY_ROOT/$SCRIPTS_DIR"
     
+    if [ ! -d "$SCRIPT_PATH" ]; then
+        error_exit "Script directory '$SCRIPT_PATH' not found."
+    fi
+
     # Use 'find' to recursively locate all .sh files in subdirectories and apply permissions.
     find "$SCRIPT_PATH" -type f -name "*.sh" -exec chmod +x {} \;
     
@@ -118,12 +165,12 @@ set_permissions() {
         error_exit "Failed to set executable permissions on scripts."
     fi
     
-    echo "All helper scripts in subdirectories are now executable."
+    echo "All helper scripts are now executable."
 }
 
 # 5. Create the global 'smarty' wrapper command
 create_global_command() {
-    echo -e "\nPhase 4: Creating Global 'smarty' Command..."
+    echo -e "\n\033[0;33mPhase 4: Creating Global 'smarty' Command...\033[0m"
     
     # A simple wrapper function placed in the global bin directory
     WRAPPER_SCRIPT="$GLOBAL_BIN_DIR/smarty"
@@ -139,15 +186,16 @@ SCRIPT_COMMAND="\$1"
 shift
 
 # 1. Define the base script directory
-SMARTY_SCRIPT_BASE="\$SMARTY_ROOT/.scripts"
+SMARTY_SCRIPT_BASE="\$SMARTY_ROOT/$SCRIPTS_DIR"
 
 # 2. Find the script with the exact name (case-sensitive) recursively
 # Note: Escaping the '*' is critical to prevent shell expansion here.
+# Use the file extension in the search pattern
 SCRIPT_PATH=\$(find "\$SMARTY_SCRIPT_BASE" -type f -name "\$SCRIPT_COMMAND.sh" 2>/dev/null)
 
 if [ -z "\$SCRIPT_PATH" ]; then
-    echo "ERROR: Smarty command '\$SCRIPT_COMMAND' not found." >&2
-    echo "Check available scripts in: \$SMARTY_ROOT/.scripts/" >&2
+    echo -e "\033[1;31mERROR:\033[0m Smarty command '\$SCRIPT_COMMAND' not found." >&2
+    echo "Check available scripts in: \$SMARTY_ROOT/$SCRIPTS_DIR/" >&2
     exit 1
 fi
 
@@ -163,13 +211,12 @@ EOF
         echo "Attempting to create global command using 'sudo'..."
         echo -e "$WRAPPER_CONTENT" | sudo tee "$WRAPPER_SCRIPT" > /dev/null
         sudo chmod +x "$WRAPPER_SCRIPT"
-        echo "Please note: If a password prompt appears, it's for creating the global command."
     else
         echo "Creating wrapper at $WRAPPER_SCRIPT..."
         echo -e "$WRAPPER_CONTENT" > "$WRAPPER_SCRIPT"
         chmod +x "$WRAPPER_SCRIPT"
     fi
-
+    
     if [ $? -ne 0 ]; then
         error_exit "Failed to create or set permissions on the global 'smarty' wrapper script."
     fi
@@ -191,9 +238,10 @@ create_global_command
 # 6. Final success message and instructions
 echo -e "\n\n\033[1;32m🎉 Smarty Vault Installation Complete!\033[0m"
 echo "--------------------------------------------------------------------------------"
-echo "1. RESTART YOUR TERMINAL to load the new SMARTY_ROOT variable."
-echo "2. Open Obsidian and create a new vault pointing to: $SMARTY_ROOT/04.vault/"
-echo -e "3. Test your new command (from any directory):\n"
+echo "1. RESTART YOUR TERMINAL (or run 'source $PROFILE_FILE') to load the new SMARTY_ROOT variable."
+echo "2. Your configuration is now located at: $INSTALL_PATH"
+echo "3. Open Obsidian and create a new vault pointing to: $SMARTY_ROOT/04.vault/"
+echo -e "4. Test your new command (from any directory):\n"
 echo -e "\033[1;37msmarty new-course \"CHEM-101-Intro\"\033[0m"
 echo -e "\033[1;37msmarty new-project \"Thesis-Manuscript\"\033[0m"
 echo "--------------------------------------------------------------------------------"
