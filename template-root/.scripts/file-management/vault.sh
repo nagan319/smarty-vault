@@ -3,15 +3,19 @@
 # ==============================================================================
 # vault.sh
 # ------------------------------------------------------------------------------
-# DESCRIPTION: Opens the Obsidian Vault folder (04.vault/) using the OS's 
-#              default file handler. This launches Obsidian directly to the 
-#              vault location, provided the SMARTY_ROOT variable is set.
+# DESCRIPTION: Launches the Obsidian Vault folder (04.vault/) directly 
+#              using the explicit Obsidian executable path.
 # ==============================================================================
+
+# --- Configuration: CHANGE THIS LINE ---
+# Find the command that works for your system (e.g., 'obsidian' if in PATH, or the full Flatpak command)
+OBSIDIAN_CMD="flatpak run md.obsidian.Obsidian"
+# ----------------------------------------
 
 # --- Prerequisites ---
 if [ -z "$SMARTY_ROOT" ]; then
     echo "ERROR: The SMARTY_ROOT environment variable is not set." >&2
-    echo "Please run the global command 'smarty' or source your shell profile." >&2
+    echo "Please source your shell profile." >&2
     exit 1
 fi
 
@@ -26,27 +30,8 @@ fi
 
 echo "Launching Obsidian vault at: $VAULT_PATH"
 
-# Use the appropriate command for the operating system to open the path
-# 'xdg-open' for Linux (Wayland/X11), 'open' for macOS, 'start' for Windows (WSL).
-# Note: For many Linux/Wayland setups, this will launch Obsidian directly.
-
-case "$(uname -s)" in
-    Linux*)
-        # Uses the Linux standard way to open a file/directory (xdg-open is Wayland/X11 compatible)
-        nohup xdg-open "$VAULT_PATH" > /dev/null 2>&1 &
-        ;;
-    Darwin*)
-        # macOS standard command
-        open "$VAULT_PATH"
-        ;;
-    CYGWIN*|MINGW*|MSYS*)
-        # Windows/Git Bash/MSYS standard (requires 'start' to run in background)
-        start "" "$VAULT_PATH"
-        ;;
-    *)
-        echo "Warning: Using generic 'xdg-open' on unknown OS." >&2
-        xdg-open "$VAULT_PATH"
-        ;;
-esac
+# Execute Obsidian, passing the vault path as an argument.
+# 'nohup' and '&' run the command in the background, detaching it from the terminal.
+nohup $OBSIDIAN_CMD "$VAULT_PATH" > /dev/null 2>&1 &
 
 exit 0

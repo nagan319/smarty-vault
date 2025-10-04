@@ -118,7 +118,7 @@ Stores long-term, exploratory work, including original research codebases, data 
 
 The Obsidian Vault. This folder contains all your editable, plain-text Markdown files, serving as the single source of truth for your knowledge and data.
 
-`vault.sh` can be used to automatically open Obsidian at the vault subdirectory.
+`vault.sh` can be used to automatically open Obsidian at the vault subdirectory. Note that this script assumes Obsidian is installed via Flatpak.
 
 ## Setup and Dependencies
 
