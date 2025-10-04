@@ -15,7 +15,7 @@ if [ -z "$SMARTY_ROOT" ]; then
     exit 1
 fi
 
-LATEX_ENGINE="mklatex"
+LATEX_ENGINE="latexmk"
 VAULT_SOURCE_DIR="$SMARTY_ROOT/04.vault"
 ACCEPTED_EXTENSIONS="md,tex" # For FZF filtering
 
