@@ -136,6 +136,7 @@ The Obsidian Vault. This folder contains all your editable, plain-text Markdown 
 
 - Obsidian: Installed on your system.
 - LaTeX Build Tool (latexmk, xelatex etc.): Installed on your system and added to your system PATH. Smarty Vault assumes latexmk by default, so if you are using another compiler you would have to alter the script.
+- fzf: Installed on your system. fzf is a fuzzy finder for making `pandoc-compile.sh` more effective and frictionless.
 - Pandoc: Installed on your system and added to your system PATH (required for `pandoc-compile.sh` and `crm-compile.sh` to convert Markdown/LaTeX to professional PDFs).
 - Shell Environment: A Unix-like shell (Bash/Zsh on macOS/Linux, or WSL/Git Bash on Windows) to run the .sh scripts.
 
