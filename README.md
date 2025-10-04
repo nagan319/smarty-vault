@@ -1,15 +1,16 @@
 # Smarty Vault: Unify Your Academic Life
 
-| Core Philosophy | Engine | Primary Tools | Status |
-| :--- | :--- | :--- | :--- |
-| **Frictionless Workflow** | ⚙️ Shell Scripts (Bash) | **Obsidian, Pandoc, rclone** | ✅ Stable |
+![Build Status](https://img.shields.io/badge/Status-✅%20Stable%20(Integrated)-1CA950.svg?style=flat-square)
+![Core System](https://img.shields.io/badge/Core%20System-Obsidian%20%7C%20Pandoc%20%7C%20rclone-8A2BE2.svg?style=flat-square)
+![Automation Engine](https://img.shields.io/badge/Engine-Shell%20Automation%20(Bash%20%26%20Fish)-4c7899.svg?style=flat-square)
 
-| Feature Focus | Description | Command Examples |
-| :--- | :--- | :--- |
-| **Academic Organization** | Enforces consistent structure for all coursework and projects. | `smarty new-course <NAME>` |
-| **Professional Output** | Compiles source files (MD/TeX) into publication-ready PDFs. | `smarty pandoc-compile <FILE>` |
-| **Network Management** | Generates reports from the internal CRM database in Obsidian. | `smarty crm-compile` |
+---
 
+The modern academic career is fragmented, often requiring students to juggle coursework, research files, and professional networking data across disparate systems. Smarty Vault is a unified, shell-script-driven organization system built on the powerful foundation of **Obsidian** and designed to solve this fragmentation.
+
+Smarty Vault's philosophy is simple: maximize consistency, minimize friction.
+
+... (rest of README follows)
 The modern academic career is fragmented, often requiring students to juggle coursework, research files, and professional networking data across disparate systems. Smarty Vault is a unified, shell-script-driven organization system built on the powerful foundation of Obsidian and designed to solve this fragmentation.
 
 Smarty Vault's philosophy is simple: maximize consistency, minimize friction.
